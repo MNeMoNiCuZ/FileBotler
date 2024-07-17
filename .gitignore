@@ -1,6 +1,9 @@
 # Config files
 config.ini
 
+# Development / Backup folder
+development/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
