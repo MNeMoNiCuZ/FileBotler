@@ -1,0 +1,17 @@
+def preview_changes(root_path):
+    """
+    Preview the changes that would be made by the execute_changes function.
+    This function should not modify any files.
+    """
+    changes = []
+    # Add your preview logic here
+    # Populate the 'changes' list with tuples of (old_path, new_path) or (operation, parameters)
+    return changes
+
+def execute_changes(changes):
+    """
+    Execute the actual file operations.
+    """
+    for change in changes:
+        # Perform the file operation here (e.g., move, rename, zip, unzip, etc.)
+        pass

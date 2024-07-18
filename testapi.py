@@ -1,5 +1,5 @@
 # test_api_engine.py
-from api_engine import APIEngine
+from core.api_engine import APIEngine
 
 def test_api_engine():
     api_engine = APIEngine(engine='openai')  # Adjust the engine as needed
