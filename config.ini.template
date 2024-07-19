@@ -10,7 +10,7 @@ ollama_key = ollama_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 [Models]
 # Default models
-groq_default = llama3-70b-8192
+groq_default = llama3-groq-70b-8192-tool-use-preview
 ollama_default = llama3:8b
 openai_default = gpt-4o
 
