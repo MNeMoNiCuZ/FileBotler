@@ -1,1 +1,6 @@
-﻿
+﻿PyQt5
+Pillow
+Wand
+send2trash
+openai
+groq

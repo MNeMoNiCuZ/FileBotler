@@ -10,15 +10,27 @@ def add_print_statements(code):
                 new_body = []
                 for stmt in node.body:
                     new_body.append(stmt)
-                    if isinstance(stmt, ast.Assign) and isinstance(stmt.value, ast.Call) and stmt.value.func.id == 'append':
-                        print_stmt = ast.Expr(
-                            value=ast.Call(
-                                func=ast.Name(id='print', ctx=ast.Load()),
-                                args=[ast.Str(s=f"Would {stmt.value.args[0].s}: " + "{" + stmt.value.args[1].s + "}")],
-                                keywords=[]
-                            )
-                        )
-                        new_body.append(print_stmt)
+                    if isinstance(stmt, ast.Expr) and isinstance(stmt.value, ast.Call):
+                        func = stmt.value.func
+                        if isinstance(func, ast.Attribute) and func.attr == 'append':
+                            args = stmt.value.args
+                            if len(args) >= 2:
+                                print_stmt = ast.Expr(
+                                    value=ast.Call(
+                                        func=ast.Name(id='print', ctx=ast.Load()),
+                                        args=[
+                                            ast.JoinedStr([
+                                                ast.Str(s=f"Would {args[0].s}: "),
+                                                ast.FormattedValue(
+                                                    value=args[1],
+                                                    conversion=-1
+                                                )
+                                            ])
+                                        ],
+                                        keywords=[]
+                                    )
+                                )
+                                new_body.append(print_stmt)
                 node.body = new_body
             return node
 

@@ -1,6 +1,9 @@
 import re
 import os
+import logging
 from core.api_engine import APIEngine
+
+logging.basicConfig(level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
 
 def load_code_generation_prompt():
     script_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -9,24 +12,31 @@ def load_code_generation_prompt():
         with open(prompt_path, 'r') as file:
             return file.read()
     except FileNotFoundError:
+        logging.error(f"Code generation prompt file not found at {prompt_path}")
         print(f"Error: Code generation prompt file not found at {prompt_path}")
         print("Please ensure the file exists and try again.")
         exit(1)
 
-def generate_code(user_input, sample_code, context=""):
-    api_engine = APIEngine(engine='openai')  # Adjust the engine as needed
+def generate_code(user_input, sample_code):
+    api_engine = APIEngine(engine='groq')  # Adjust the engine as needed
     code_generation_prompt = load_code_generation_prompt()
     
     prompt = {
         "messages": [
             {"role": "system", "content": f"{code_generation_prompt}\n\nUse the following sample code structure as a guide:\n\n{sample_code}"},
-            {"role": "user", "content": f"Generate Python code to: {user_input}\n\nAdditional context: {context}\n\nIMPORTANT: Use send2trash instead of os.remove or os.rmdir for file and folder removal operations."}
+            {"role": "user", "content": f"""Generate Python code to: {user_input}"""}
         ],
         "temperature": 0.7,
         "max_tokens": 1000
     }
     response = api_engine.call_api(prompt)
     return clean_generated_code(response)
+
+def fix_send2trash_usage(code):
+    logging.debug(f"Original code:\n{code}")
+    fixed_code = code.replace('send2trash.send2trash(', 'send2trash(')
+    logging.debug(f"Fixed code:\n{fixed_code}")
+    return fixed_code
 
 def clean_generated_code(code):
     code = re.sub(r'```python|```', '', code)
